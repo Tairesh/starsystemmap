@@ -9,13 +9,14 @@ $(document).ready(function main() {
     	alert("Увы, ваш браузер не поддерживает WebGL.")
     	return;
     }
+    //Настраиваем рендер
     renderer.setClearColor(0x000000);
     renderer.setSize( window.innerWidth - 25, window.innerHeight - 25 );
 	renderer.sortObjects = false;
 	renderer.autoClear = false;
-
+    //Добавляем в DOM
     document.body.appendChild( renderer.domElement );
-
+    //Модель нашей системы - мы её передадим в компонент, распарсим и нарисуем
     var data = 
     {
         stars: {},
@@ -56,10 +57,11 @@ $(document).ready(function main() {
         },
         position: {x:-440,y:400}
     };
-
+    //Создаем компонент
     ssMap = new ssmap(renderer, data);
-
+    //Биндим ивенты для всяких дел
     var elem = $("canvas");
+    //Биндим скролл мыши для FF, все браузеры понимают mousewheel, а этот нет =/
     elem.bind("DOMMouseScroll", {camera:ssMap.camera}, function(e){
         ssMap.wheel(e);
     });
@@ -75,15 +77,14 @@ $(document).ready(function main() {
     elem.bind("mousemove", {camera:ssMap.camera}, function(e){
         ssMap.mousemove(e);
     });
-    
-    var draw = function() 
-    {
+    //Рисуем
+    (function draw(){
 
         requestAnimationFrame( draw );
         
         renderer.clear();
 
         ssMap.draw.bind(ssMap).call(ssMap, {});
-    }
-    draw();
+    })();
+    
 });

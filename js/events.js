@@ -41,35 +41,6 @@ ssmap.prototype.events = function()
         x = e.pageX;
         y = e.pageY;
 
-        /*var vector = new THREE.Vector3( x, y, 0.5 );
-        projector.unprojectVector( vector, e.data.camera );
-
-        var ray =  = new THREE.Ray();
-        ray.setOrigin( e.data.camera.position ).setDirection( vector.subSelf( e.data.camera.position ).normalize() );
-
-        var intersects = ray.intersectObjects( [cube] );
-
-        if ( intersects.length > 0 ) {
-
-            if ( INTERSECTED != intersects[ 0 ].vertex ) {
-
-                attributes.size.value[ INTERSECTED ] = PARTICLE_SIZE;
-
-                INTERSECTED = intersects[ 0 ].vertex;
-
-                attributes.size.value[ INTERSECTED ] = PARTICLE_SIZE * 1.25;
-                attributes.size.needsUpdate = true;
-
-            }
-
-        } else if ( INTERSECTED !== null ) {
-
-            attributes.size.value[ INTERSECTED ] = PARTICLE_SIZE;
-            attributes.size.needsUpdate = true;
-            INTERSECTED = null;
-
-        }
-*/
         if (!isMove) {
             return;
         }

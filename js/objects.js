@@ -69,13 +69,12 @@ ssmap.prototype.objects = function(data) {
 
         var particles = new THREE.ParticleSystem( geometry, material );
         particles.sortParticles = true;
-
+        //Добавляем текстовую надпись
         particles.text = addText.bind(this).call(this, pos, name);
-
+        //Добавляем орбиту.
         particles.orbit = this.addOrbit({x:0,y:0}, vectorLength(pos));
-
         this.sceneOrbits.add(particles.orbit);
-
+        //Подсветка
         this.domEvent.bind(particles, "mouseover", function(e){
             e.target.material.color.setHex(0xffffff);
             e.target.orbit.hover();
@@ -87,7 +86,7 @@ ssmap.prototype.objects = function(data) {
     
         this.scene.add(particles);
     }
-
+    //Маркер положения в системе
     this.addCurrPosMarker = function(pos)
     {
         var radius = 5;
@@ -241,7 +240,7 @@ ssmap.prototype.objects = function(data) {
             particles.text[i] = addText.bind(this).call(this, pos, names[i]);
         }
         this.sceneOrbits.add(particles.orbit);
-
+        //Подсветка
         this.domEvent.bind(particles, "mouseover", function(e){
             e.target.material.color.setHex(0xffffff);
             for (var i = 0; i < e.target.link.length; i++) {
@@ -288,10 +287,10 @@ ssmap.prototype.objects = function(data) {
         line.position.x = pos.x;
         line.position.y = pos.y;
 
+        //Подсветка
         line.hover = function() {
             this.material.color.setHex(0xffffff);
         };
-
         line.unhover = function() {
             this.material.color.setHex(0x666666);
         };
@@ -301,7 +300,6 @@ ssmap.prototype.objects = function(data) {
         return line;
 
     }
-
     this.addLine = function(pos1, pos2)
     {
         var material = new THREE.LineBasicMaterial({
@@ -343,7 +341,7 @@ ssmap.prototype.objects = function(data) {
         context1.fillText(text, canvas1.width / 2, canvas1.height / 2);
         
 
-        texture1 = new THREE.Texture(canvas1) 
+        var texture1 = new THREE.Texture(canvas1) 
         texture1.needsUpdate = true;
 
 
@@ -354,14 +352,15 @@ ssmap.prototype.objects = function(data) {
 
         g.vertices.push( v );
 
-        material = new THREE.ParticleBasicMaterial( { size: 415, sizeAttenuation: true, map: texture1, transparent: true } );
+        var material = new THREE.ParticleBasicMaterial( { size: 415, sizeAttenuation: true, map: texture1, transparent: true } );
         
-
         var p1 = new THREE.ParticleSystem( g, material );
         p1.sortParticles = true;
+
         this.sceneText.add( p1 );
         return p1;
     }
+    //Парсим модель
     //Добавляем звезду
     this.addStar({x:0,y:0});
     //Добавляем планеты
@@ -386,9 +385,6 @@ ssmap.prototype.objects = function(data) {
         //Магия
         list[data.jgs[v].id].link2.push(list[data.jgs[v].link].link[list[data.jgs[v].link].link.length -1]);
         list[data.jgs[v].link].link2.push(list[data.jgs[v].id].link[list[data.jgs[v].id].link.length - 1]);
-        
-        
-
     }
     //Маркер нашей позиции в системе
     this.addCurrPosMarker(data.position);

@@ -62,21 +62,11 @@ $(document).ready(function main() {
     //Биндим ивенты для всяких дел
     var elem = $("canvas");
     //Биндим скролл мыши для FF, все браузеры понимают mousewheel, а этот нет =/
-    elem.bind("DOMMouseScroll", {camera:ssMap.camera}, function(e){
-        ssMap.wheel(e);
-    });
-    elem.bind("mousewheel", {camera:ssMap.camera}, function(e){
-        ssMap.wheel(e);
-    });
-    elem.bind("mousedown", function(e){
-        ssMap.mousedown(e);
-    });
-    elem.bind("mouseup", function(e){
-        ssMap.mouseup(e);
-    });
-    elem.bind("mousemove", {camera:ssMap.camera}, function(e){
-        ssMap.mousemove(e);
-    });
+    elem.bind("DOMMouseScroll", {camera:ssMap.camera}, ssMap.mousewheel);
+    elem.bind("mousewheel", {camera:ssMap.camera}, ssMap.mousewheel);
+    elem.bind("mousedown", ssMap.mousedown);
+    elem.bind("mouseup", ssMap.mouseup);
+    elem.bind("mousemove", {self: ssMap}, ssMap.mousemove);
     //Рисуем
     (function draw(){
 

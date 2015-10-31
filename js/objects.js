@@ -347,7 +347,7 @@ ssmap.prototype.objects = function(data) {
 
         var v = new THREE.Vector3();
         v.x = pos.x;
-        v.y = pos.y + 20;
+        v.y = pos.y + 10;
         v.z = 0;
 
         g.vertices.push( v );

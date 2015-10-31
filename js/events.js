@@ -4,32 +4,38 @@ ssmap.prototype.events = function()
     var oldX = 0; var oldY = 0;
 
     //Прокрутка мыши
-    this.wheel = function (e) {
-        var delta =  e.originalEvent.deltaY || e.originalEvent.detail || e.originalEvent.wheelDelta; 
+    this.mousewheel = function (e) {
+        var delta =  e.originalEvent.wheelDelta;
         var no_move = false;
 
-        if (delta > 0) {
-            e.data.camera.scale.x = e.data.camera.scale.y += 0.07;
+        e.data.camera.scale.x = e.data.camera.scale.y -= delta*(0.0008*e.data.camera.scale.x);
 
-            if (e.data.camera.scale.y > 1.52) {
-                e.data.camera.scale.x = e.data.camera.scale.y = 1.52;
-            }
+        if (e.data.camera.scale.y > 1.52) {
+            e.data.camera.scale.x = e.data.camera.scale.y = 1.52;
+            no_move = true;
         }
-        else if (delta < 0) {
-            e.data.camera.scale.x = e.data.camera.scale.y -= 0.07;
-
-            if (e.data.camera.scale.x < 0.01) {
-                e.data.camera.scale.x = e.data.camera.scale.y = 0.01;
-            }
+        if(e.data.camera.scale.y < 0.2) {
+            e.data.camera.scale.x = e.data.camera.scale.y = 0.2;
+            no_move = true;
+        }
+        
+        if (!no_move && delta > 0) { // смещение в сторону скролла
+            x = e.pageX-window.innerWidth/2; 
+            y = e.pageY-window.innerHeight/2;
+            e.data.camera.position.x += (x*e.data.camera.scale.x)/(0.1*delta);
+            e.data.camera.position.y -= (y*e.data.camera.scale.y)/(0.1*delta);
         }
 
         e.preventDefault ? e.preventDefault() : (e.returnValue = false);
     };
+    
     this.mousedown = function (e) {
-        isMove = true;
+        if (e.which == 1) {
+            isMove = true;
 
-      	oldX = e.pageX;
-        oldY = e.pageY;
+            oldX = e.pageX;
+            oldY = e.pageY;
+        }
     };
 
     this.mouseup = function (e) {
@@ -37,21 +43,35 @@ ssmap.prototype.events = function()
     };
 
     this.mousemove = function (e) {
-     
-        x = e.pageX;
-        y = e.pageY;
+        
+        //класический способ перевода координат мыши в мировые координаты
+        var projector = new THREE.Projector();
+        var vector = new THREE.Vector3(
+        ( e.pageX / window.innerWidth ) * 2 - 1,
+        - ( e.pageY / window.innerHeight ) * 2 + 1,
+        0.5 );
 
+        var pos = projector.unprojectVector( vector, e.data.self.camera );
+        
+        
         if (!isMove) {
             return;
         }
 
-        e.data.camera.position.x -= (x - oldX) / (1/e.data.camera.scale.x);
-        e.data.camera.position.y += (y - oldY) / (1/e.data.camera.scale.x);
+        x = e.pageX;
+        y = e.pageY;
+
+        e.data.self.camera.position.x -= (x - oldX) / (1/e.data.self.camera.scale.x);
+        e.data.self.camera.position.y += (y - oldY) / (1/e.data.self.camera.scale.x);
 
         oldX = x;
         oldY = y;
         
 
+    };
+    
+    this.contextmenu = function (e) {
+        return false; 
     };
 
 }
